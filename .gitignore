@@ -1,0 +1,15 @@
+/.ansible/
+/.bash_history
+/.bash_logout
+/.bashrc
+/.bundle/
+/.cache/
+/.cargo/
+/.config/
+/.lesshst
+/.local/
+/.npm/
+/.profile
+/.rustup/
+/.ssh/
+/.viminfo
