@@ -58,5 +58,7 @@ alp-trace json --file=${nginx_access_log} \
 
 # touch ${result_dir}/pt-query-digest.txt
 # cp ${result_dir}/pt-query-digest.txt ${result_dir}/pt-query-digest.txt.prev
-# pt-query-digest --explain "h=${DB_HOST},u=${DB_USER},p=${DB_PASS},D=${DB_DATABASE}" --progress percentage,5 ${mysql_slow_log} > ${result_dir}/pt-query-digest.txt
+# sudo chmod 755 `dirname ${mysql_slow_log}`
+# sudo chmod 644 ${mysql_slow_log}
+# pt-query-digest  --progress percentage,5 --explain "h=${DB_HOST},u=${DB_USER},p=${DB_PASS},D=${DB_DATABASE}" ${mysql_slow_log} > ${result_dir}/pt-query-digest.txt
 # pt-query-digest ${mysql_slow_log} > ${result_dir}/pt-query-digest.txt
