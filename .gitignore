@@ -13,3 +13,9 @@
 /.rustup/
 /.ssh/
 /.viminfo
+/.vim/
+/.xbuild
+/backup
+/go
+/log
+/result
