@@ -30,11 +30,14 @@ server {
     location ~ .*\.(htm|html|css|js|jpg|png|gif|ico) {
         expires 24h;
         add_header Cache-Control public;
+        # try_files $uri @internal;  # 静的ファイルがない場合はapp serverに問い合わせたい場合はコメントアウトを外す。# この場合はapp server側で静的ファイル生成するなどするとよい。初期化時にファイルを消すのを忘れないように。
     }
 
-    location / {
-      root /home/isucon/webapp/frontend/dist;
-      index index.html;
-      try_files $uri $uri/index.html /index.html;
+    location @internal {
+        internal;
+        proxy_set_header Host $host;
+        proxy_pass http://localhost:8080;
+        proxy_http_version 1.1;          # app server との connection を keepalive するなら追加
+        proxy_set_header Connection "";  # app server との connection を keepalive するなら追加
     }
 }

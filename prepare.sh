@@ -28,25 +28,27 @@ EOF
 . ./env.sh
 
 # ====== go ======
-cd /home/isucon/webapp/golang
-make all
+(
+  cd /home/isucon/webapp/golang
+  make all
+)
 mkdir -p /home/isucon/log/app
 #sudo logrotate -f /home/isucon/etc/logrotate.d/app
 sudo systemctl restart isucon.go.service
 
-now=`date +'%Y%m%d%H%M%S'`
+now=`date +'%Y-%m-%dT%H:%M:%S'`
 
 # ====== nginx ======
-mkdir -p /home/isucon/log/nginx
-sudo touch ${nginx_access_log} ${nginx_error_log}
-sudo cp ${nginx_access_log} ${nginx_access_log}.$now
-sudo truncate -s 0 ${nginx_access_log}
-sudo ls -1 ${nginx_access_log}.* | sort -r | uniq | sed -n '6,$p' | xargs rm -f
-sudo cp ${nginx_error_log} ${nginx_error_log}.$now
-sudo truncate -s 0 ${nginx_error_log}
-sudo ls -1 ${nginx_error_log}.* | sort -r | uniq | sed -n '6,$p' | xargs rm -f
-sudo nginx -c ./etc/openresty/nginx.conf -t
-sudo systemctl restart nginx
+# mkdir -p /home/isucon/log/nginx
+# sudo touch ${nginx_access_log} ${nginx_error_log}
+# sudo cp ${nginx_access_log} ${nginx_access_log}.$now
+# sudo truncate -s 0 ${nginx_access_log}
+# sudo ls -1 ${nginx_access_log}.* | sort -r | uniq | sed -n '6,$p' | xargs rm -f
+# sudo cp ${nginx_error_log} ${nginx_error_log}.$now
+# sudo truncate -s 0 ${nginx_error_log}
+# sudo ls -1 ${nginx_error_log}.* | sort -r | uniq | sed -n '6,$p' | xargs rm -f
+# sudo nginx -c ./etc/openresty/nginx.conf -t
+# sudo systemctl restart nginx
 
 # ====== openresty =====
 mkdir -p /home/isucon/log/nginx
@@ -57,7 +59,7 @@ sudo ls -1 ${nginx_access_log}.* | sort -r | uniq | sed -n '6,$p' | xargs rm -f
 sudo cp ${nginx_error_log} ${nginx_error_log}.$now
 sudo truncate -s 0 ${nginx_error_log}
 sudo ls -1 ${nginx_error_log}.* | sort -r | uniq | sed -n '6,$p' | xargs rm -f
-sudo openresty -c ./etc/openresty/nginx.conf -t
+sudo openresty -c /home/isucon/etc/openresty/nginx.conf -t
 sudo systemctl restart openresty
 
 # ====== mysql ======
@@ -71,6 +73,10 @@ sudo systemctl restart openresty
 
 # ====== redis ======
 # sudo systemctl restart redis-server
+# redis-cli flushall  # redisの中身をflushしたいときはコメントアウト
+
+# ====== varnish ======
+# sudo systemctl restart varnish
 
 # slow log
 # MYSQL="mysql -h${DB_HOST} -P${DB_PORT} -u${DB_USER} -p${DB_PASS} ${DB_DATABASE}"

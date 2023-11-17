@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/XSAM/otelsql"
@@ -13,14 +12,6 @@ import (
 
 	_ "github.com/mackee/pgx-replaced"
 )
-
-func GetEnv(key, val string) string {
-	if v := os.Getenv(key); v == "" {
-		return val
-	} else {
-		return v
-	}
-}
 
 func GetDB() (*sqlx.DB, error) {
 	dsn := fmt.Sprintf(
