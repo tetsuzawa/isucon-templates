@@ -47,6 +47,21 @@ func (c *cacheExpired[K, V]) Get(key K) (V, bool) {
 	return v.value, found
 }
 
+func (c *cacheExpired[K, V]) GetAll() map[K]V {
+	c.RLock()
+	vs := c.items
+	c.RUnlock()
+
+	ret := make(map[K]V, len(vs))
+	for k, v := range vs {
+		if time.Now().After(v.expire) {
+			continue
+		}
+		ret[k] = v.value
+	}
+	return ret
+}
+
 func (c *cacheExpired[K, V]) Del(key K) {
 	c.Lock()
 	delete(c.items, key)

@@ -3,6 +3,8 @@ package gotemplates
 import (
 	"context"
 
+	"github.com/labstack/echo/v4"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/propagation"
@@ -23,4 +25,17 @@ func initTracer(ctx context.Context) (*sdktrace.TracerProvider, error) {
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
 	return tp, nil
+}
+
+// main関数に↓を追記
+func main_() {
+	tp, _ := initTracer(context.Background())
+	defer func() {
+		if err := tp.Shutdown(context.Background()); err != nil {
+			panic(err)
+		}
+	}()
+
+	e := echo.New()
+	e.Use(otelecho.Middleware("isucholar"))
 }

@@ -28,6 +28,13 @@ func (c *cache[K, V]) Get(key K) (V, bool) {
 	return v, found
 }
 
+func (c *cache[K, V]) GetAll() map[K]V {
+	c.RLock()
+	v := c.items
+	c.RUnlock()
+	return v
+}
+
 func (c *cache[K, V]) Del(key K) {
 	c.Lock()
 	delete(c.items, key)
