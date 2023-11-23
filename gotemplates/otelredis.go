@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/redis/go-redis/extra/redisotel/v9"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -21,6 +22,12 @@ func GetRedisClient(ctx context.Context) *redis.Client {
 		DB:       0,  // use default DB
 	})
 	WaitRedis(ctx, rdb)
+
+	if GetEnv("OTEL_SDK_DISABLED", "false") != "true" {
+		if err := redisotel.InstrumentTracing(rdb); err != nil {
+			panic(err)
+		}
+	}
 
 	return rdb
 }
