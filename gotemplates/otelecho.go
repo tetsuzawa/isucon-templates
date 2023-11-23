@@ -11,4 +11,4 @@ func main_func() {
 	}()
 }
 
-e.Use(otelecho.Middleware("isucholar"))
+// e.Use(otelecho.Middleware("isucholar"))
