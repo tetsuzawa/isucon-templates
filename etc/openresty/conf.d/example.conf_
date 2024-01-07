@@ -25,6 +25,10 @@ server {
     ssl_session_timeout 1m;  # cacheする時間。1mは1分。
 
     location ~ /api/courses/[0-9a-zA-Z-]+/classes/[0-9a-zA-Z-]+/assignments/export {
+        if ($http_cookie !~* "trace_id") {
+            add_header Set-Cookie "trace_id=$trace_id; Path=/; HttpOnly";
+        }
+
         proxy_pass   http://192.168.0.11:7000;
         proxy_http_version 1.1;          # app server との connection を keepalive するなら追加
         proxy_set_header Connection "";  # app server との connection を keepalive するなら追加
@@ -34,6 +38,10 @@ server {
     root /home/isucon/webapp/frontend/dist;
 
     location ~ .*\.(htm|html|css|js|jpg|png|gif|ico) {
+        if ($http_cookie !~* "trace_id") {
+            add_header Set-Cookie "trace_id=$trace_id; Path=/; HttpOnly";
+        }
+
         expires 24h;
         add_header Cache-Control public;
         # try_files $uri @internal;  # 静的ファイルがない場合はapp serverに問い合わせたい場合はコメントアウトを外す。# この場合はapp server側で静的ファイル生成するなどするとよい。初期化時にファイルを消すのを忘れないように。

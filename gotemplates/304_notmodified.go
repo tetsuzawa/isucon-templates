@@ -6,6 +6,7 @@ import (
 	"github.com/cespare/xxhash/v2"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strings"
 )
 
 type Resp struct {
@@ -33,8 +34,9 @@ func Handle304NotModified(c echo.Context) error {
 	etag := GenerateETag(respBlob)
 
 	// リクエストヘッダのETagと今生成したETagが一致するか比較し、一致したら304を返す
-	if match := c.Request().Header.Get("If-None-Match"); match != "" {
-		if match == etag || match == fmt.Sprintf("W/%s", etag) {
+	if ifNoneMatch := c.Request().Header.Get("If-None-Match"); ifNoneMatch != "" {
+		if strings.Contains(ifNoneMatch, etag) {
+			//if ifNoneMatch == etag || ifNoneMatch == fmt.Sprintf("W/%s", etag) {
 			return c.NoContent(http.StatusNotModified)
 		}
 	}
